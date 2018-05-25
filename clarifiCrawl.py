@@ -6,12 +6,13 @@ from clarifai.rest import ClarifaiApp
 import time
 
 def setup(numRuns, seed, relatibility):
-	subscriptionKey = "b52c235a432e4bf193934695fbe2db1f"
+	subscriptionKey = "2725af227ea54a15a7053462ad498f76"
 	host = "api.cognitive.microsoft.com"
 	headers = {'Ocp-Apim-Subscription-Key': subscriptionKey}
 	conn = http.client.HTTPSConnection(host)
-	app = ClarifaiApp(api_key="c2cd1be48fc64640b485e9185accffce")
+	app = ClarifaiApp(api_key="e48ba6f7699d464cbd0b3df1f258daec")
 	model = app.models.get('general-v1.3')
+	time.sleep(1)
 	for i in range(0, numRuns):
 		seed = getAttributes(model, seed, headers, conn, relatibility)
 	print("Done")
