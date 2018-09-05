@@ -3,37 +3,36 @@ from urllib import request
 import webbrowser
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
+from apiclient.discovery import build
 import time
+import random
 
-def setup(numRuns, seed, relatibility):
-	subscriptionKey = "2725af227ea54a15a7053462ad498f76"
-	host = "api.cognitive.microsoft.com"
-	headers = {'Ocp-Apim-Subscription-Key': subscriptionKey}
-	conn = http.client.HTTPSConnection(host)
-	app = ClarifaiApp(api_key="e48ba6f7699d464cbd0b3df1f258daec")
+relatibility = 0
+
+def setup(numRuns, seed):
+	f=open("api_keys.txt", "r")
+	clarifai_key = f.readline().strip()
+	developer_key = f.readline().strip()
+	c_x = f.readline().strip()
+	f.close()
+	app = ClarifaiApp(api_key=clarifai_key)
 	model = app.models.get('general-v1.3')
+	service = build("customsearch", "v1",developerKey=developer_key)
 	time.sleep(1)
 	for i in range(0, numRuns):
-		seed = getAttributes(model, seed, headers, conn, relatibility)
+		seed = getAttributes(model, service, seed, c_x)
 	print("Done")
 
-def getAttributes(model, urlName, headers, conn, relatibility):
+def getAttributes(model, service, query, c_x):
+	res = service.cse().list(q=query, cx=c_x,  num=10, searchType="image", fileType="jpg").execute()
+	retUrl = res['items'][random.randint(0,9)]['link']
+	time.sleep(1)
+	webbrowser.open_new(retUrl)
 	s = ""
-	data = model.predict_by_url(url=urlName)['outputs'][0]['data']['concepts']
+	data = model.predict_by_url(url=retUrl)['outputs'][0]['data']['concepts']
 	for i in range (relatibility, relatibility+5):
 		s = s + data[i]['name'] +" "
 	if "no person" in s:
 		s = s.replace("no person ", "")
 	print(s)
-	path = "/bing/v7.0/images/search"
-	term = "Microsoft Cognitive Services"
-
-	query = urllib.parse.quote(s)
-	conn.request("GET", path + "?q=" + query, headers=headers)
-	time.sleep(1)
-	response = conn.getresponse()
-	headers = [k + ": " + v for (k, v) in response.getheaders() if k.startswith("BingAPIs-") or k.startswith("X-MSEdge-")]
-	w = json.loads(response.read().decode("utf8"))['value'][0]['contentUrl']
-	
-	webbrowser.open_new(w)
-	return w;
+	return s
