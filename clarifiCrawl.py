@@ -8,6 +8,7 @@ import time
 import random
 
 relatibility = 0
+c_x = "009171367015975864750:tzgp6vvag9k"
 
 def setup(numRuns, seed):
 	f=open("api_keys.txt", "r")
@@ -20,10 +21,10 @@ def setup(numRuns, seed):
 	service = build("customsearch", "v1",developerKey=developer_key)
 	time.sleep(1)
 	for i in range(0, numRuns):
-		seed = getAttributes(model, service, seed, c_x)
+		seed = getAttributes(model, service, seed)
 	print("Done")
 
-def getAttributes(model, service, query, c_x):
+def getAttributes(model, service, query):
 	res = service.cse().list(q=query, cx=c_x,  num=10, searchType="image", fileType="jpg").execute()
 	retUrl = res['items'][random.randint(0,9)]['link']
 	time.sleep(1)

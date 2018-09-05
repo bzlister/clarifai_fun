@@ -1,3 +1,3 @@
 # clarifai_fun
-Fun webcrawler built with Calrifai and Bing search API
-You better use new API keys or Ill be sad
+Fun webcrawler built with Calrifai and Google Custom Search
+Need to get an Clarifai API key and a Google CSE developer key to use
