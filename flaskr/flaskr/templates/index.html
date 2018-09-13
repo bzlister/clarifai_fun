@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <form method="POST">
+        <input name="query" value="{{ ret_text }}">
+        <input type="number" name="autoruns" placeholder="Enter a number">
+        <div class="slidecontainer">
+                <input type="range" min="0" max="14" value="{{ relate_val  }}" class="slider" id="myRange" name="relate">
+        </div>
+        <input type="submit">
+    </form>
+    <div class="square">
+        <img src="{{ user_image }}" alt="User Image">
+    </div>
+</body>
+</html>
