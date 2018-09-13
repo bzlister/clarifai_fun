@@ -12,7 +12,7 @@ import random
 c_x = "009171367015975864750:tzgp6vvag9k"
 def imageSearch(text, numRuns, relatibility):
 	seed = text
-	f=open("API_KEY_FILE_LOCATION", "r")
+	f=open("C:/Users/bzlis/api_keys.txt", "r")
 	clarifai_key = f.readline().strip()
 	developer_key = f.readline().strip()
 	c_x = f.readline().strip()
@@ -30,14 +30,15 @@ def imageSearch(text, numRuns, relatibility):
 
 def getAttributes(model, service, query, relatibility):
 	time.sleep(0.1)
-	res = service.cse().list(q=query, cx=c_x,  num=10, searchType="image", fileType="jpg").execute()
-	retUrl = res['items'][random.randint(0,9)]['link']
+	res = service.cse().list(q=query, cx=c_x,  num=1, searchType="image").execute()
+	retUrl = res['items'][0]['link']
 	s = ""
 	data = None
 	while (data == None):
 		try:
 			data = model.predict_by_url(url=retUrl)['outputs'][0]['data']['concepts']
 		except clarifai.errors.ApiError:
+			res = service.cse().list(q=query, cx=c_x,  num=10, searchType="image").execute()
 			retUrl = res['items'][random.randint(0,9)]['link']
 	for i in range (relatibility, relatibility+5):
 		s = s + data[i]['name'] +" "
